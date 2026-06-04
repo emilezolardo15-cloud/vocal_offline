@@ -1,8 +1,9 @@
-# 1. Nettoyage des dossiers générés par Flutter
-Remove-Item -Recurse -Force .dart_tool, .flutter-plugins, .flutter-plugins-dependencies, build -ErrorAction SilentlyContinue
+# 1. Chemins des fichiers clés
+$manifestPath = "android/app/src/main/AndroidManifest.xml"
+$kotlinDir = "android/app/src/main/kotlin/com/example/vocal_offline"
+$kotlinFile = "$kotlinDir/MainActivity.kt"
 
 # 2. Réécriture propre de l'AndroidManifest principal
-$manifestPath = "android/app/src/main/AndroidManifest.xml"
 $manifestContent = @"
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -11,7 +12,7 @@ $manifestContent = @"
         android:name="`${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name="io.flutter.embedding.android.FlutterActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""
@@ -41,10 +42,19 @@ $manifestContent = @"
 "@
 Set-Content -Path $manifestPath -Value $manifestContent
 
-# 3. Forcer la mise à jour des liaisons Flutter
-$projectPropertiesPath = "android/local.properties"
-if (Test-Path $projectPropertiesPath) {
-    Remove-Item $projectPropertiesPath -Force
+# 3. Forcer la création du fichier MainActivity.kt au format V2 strict
+if (!(Test-Path $kotlinDir)) {
+    New-Item -ItemType Directory -Force -Path $kotlinDir | Out-Null
 }
 
-Write-Host "Nettoyage radical effectue avec succes !"
+$kotlinContent = @"
+package com.example.vocal_offline
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}
+"@
+Set-Content -Path $kotlinFile -Value $kotlinContent
+
+Write-Host "AndroidManifest et MainActivity.kt ont ete v2-ises de force !"
