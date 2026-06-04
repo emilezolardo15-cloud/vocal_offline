@@ -1,8 +1,11 @@
+# Script pour forcer la mise à jour d'AndroidManifest
+$path = "android/app/src/main/AndroidManifest.xml"
+$content = @"
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <application
         android:label="vocal_offline"
-        android:name="${applicationName}"
+        android:name="`${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name="io.flutter.embedding.android.FlutterActivity"
@@ -32,3 +35,7 @@
         </intent>
     </queries>
 </manifest>
+"@
+
+Set-Content -Path $path -Value $content
+Write-Host "AndroidManifest a ete mis a jour de force !"
