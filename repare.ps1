@@ -1,6 +1,9 @@
-# Script pour forcer la mise à jour d'AndroidManifest
-$path = "android/app/src/main/AndroidManifest.xml"
-$content = @"
+# 1. Nettoyage des dossiers générés par Flutter
+Remove-Item -Recurse -Force .dart_tool, .flutter-plugins, .flutter-plugins-dependencies, build -ErrorAction SilentlyContinue
+
+# 2. Réécriture propre de l'AndroidManifest principal
+$manifestPath = "android/app/src/main/AndroidManifest.xml"
+$manifestContent = @"
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <application
@@ -36,6 +39,12 @@ $content = @"
     </queries>
 </manifest>
 "@
+Set-Content -Path $manifestPath -Value $manifestContent
 
-Set-Content -Path $path -Value $content
-Write-Host "AndroidManifest a ete mis a jour de force !"
+# 3. Forcer la mise à jour des liaisons Flutter
+$projectPropertiesPath = "android/local.properties"
+if (Test-Path $projectPropertiesPath) {
+    Remove-Item $projectPropertiesPath -Force
+}
+
+Write-Host "Nettoyage radical effectue avec succes !"
