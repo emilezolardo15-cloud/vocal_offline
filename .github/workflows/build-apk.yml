@@ -26,8 +26,12 @@ jobs:
           flutter-version: '3.19.6'
           cache: false
 
+      # Étape d'installation (qui passe grâce à nos overrides)
       - name: Install dependencies
         run: flutter pub get
 
+      # Étape de build avec injection explicite du chemin du SDK Android
       - name: Build APK
         run: flutter build apk --release
+        env:
+          ANDROID_SDK_ROOT: ${ANDROID_HOME}
