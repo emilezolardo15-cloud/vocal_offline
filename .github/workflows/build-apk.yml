@@ -26,12 +26,7 @@ jobs:
           flutter-version: '3.19.6'
           cache: false
 
-      # Étape de force : on installe les dépendances en mode déconnecté / forcé
-      - name: Install dependencies
-        run: |
-          flutter pub get --offline || flutter pub get
-
-      # On contourne le validateur d'embedding de Flutter lors du build
+      # On saute l'installation et on force Gradle à compiler l'existant
       - name: Build APK
         run: |
           cd android
