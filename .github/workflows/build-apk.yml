@@ -26,8 +26,6 @@ jobs:
           flutter-version: '3.19.6'
           cache: false
 
-      # On donne les permissions d'exécution et on lance le build via Flutter sans pub get
+      # Cette commande crée les fichiers d'intégration à la volée sur le serveur si besoin
       - name: Build APK
-        run: |
-          chmod +x android/gradlew
-          flutter build apk --release --no-pub
+        run: flutter build apk --release --no-pub
