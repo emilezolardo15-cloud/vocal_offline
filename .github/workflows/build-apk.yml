@@ -26,6 +26,8 @@ jobs:
           flutter-version: '3.19.6'
           cache: false
 
-      # Cette commande crée les fichiers d'intégration à la volée sur le serveur si besoin
+      - name: Install dependencies
+        run: flutter pub get
+
       - name: Build APK
-        run: flutter build apk --release --no-pub
+        run: flutter build apk --release
